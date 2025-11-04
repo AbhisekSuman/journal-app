@@ -1,7 +1,9 @@
 package personal.abhisek.journalApp.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import personal.abhisek.journalApp.entity.JournalEntry;
+import personal.abhisek.journalApp.repository.JournalEntryRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,18 +12,20 @@ import java.util.Map;
 
 @Service
 public class JournalEntryService {
-    Map<String, JournalEntry> journalEntryMap = new HashMap<>();
+
+    @Autowired
+    JournalEntryRepository repository;
 
 
     public List<JournalEntry> getAll() {
-        return new ArrayList<>(journalEntryMap.values());
+        return repository.findAll();
     }
 
     public JournalEntry get(String id) {
-        return journalEntryMap.get(id);
+        return repository.findById(id).orElse(null);
     }
 
     public void create(JournalEntry journalEntry) {
-        journalEntryMap.put(journalEntry.getId(), journalEntry);
+        repository.save(journalEntry);
     }
 }

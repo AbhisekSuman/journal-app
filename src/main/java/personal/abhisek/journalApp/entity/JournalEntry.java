@@ -1,14 +1,14 @@
 package personal.abhisek.journalApp.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "")
+@Document(collection = "journal_entries")
 public class JournalEntry {
 
     @Id
-    private String id;
-
+    private ObjectId id;
 
     private String title;
 
@@ -17,7 +17,7 @@ public class JournalEntry {
     public JournalEntry() {
     }
 
-    public JournalEntry(String id, String title, String description) {
+    public JournalEntry(ObjectId id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -28,11 +28,11 @@ public class JournalEntry {
         this.description = description;
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
