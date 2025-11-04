@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import personal.abhisek.journalApp.entity.JournalEntry;
 import personal.abhisek.journalApp.repository.JournalEntryRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,6 +25,7 @@ public class JournalEntryService {
     }
 
     public void create(JournalEntry journalEntry) {
+        journalEntry.setDate(LocalDateTime.now());
         repository.save(journalEntry);
     }
 

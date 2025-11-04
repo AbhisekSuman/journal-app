@@ -4,6 +4,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Document(collection = "journal_entries")
 public class JournalEntry {
 
@@ -13,6 +16,8 @@ public class JournalEntry {
     private String title;
 
     private String description;
+
+    private LocalDateTime date;
 
     public JournalEntry() {
     }
@@ -50,5 +55,13 @@ public class JournalEntry {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }
