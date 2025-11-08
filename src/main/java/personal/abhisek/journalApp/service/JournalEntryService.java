@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import personal.abhisek.journalApp.entity.JournalEntry;
+import personal.abhisek.journalApp.entity.User;
 import personal.abhisek.journalApp.repository.JournalEntryRepository;
 
 import java.time.LocalDateTime;
@@ -18,21 +20,29 @@ public class JournalEntryService {
     @Autowired
     JournalEntryRepository repository;
 
+    @Autowired
+    UserService userService;
 
-    public List<JournalEntry> getAll() {
-        return repository.findAll();
+
+    public List<JournalEntry> getAll(String userName) {
+        User user =  userService.getUserByUserName(userName);
+        return user.getJournalEntries();
     }
 
     public Optional<JournalEntry> get(ObjectId id) {
         return repository.findById(id);
     }
 
-    public void create(JournalEntry journalEntry) {
+    @Transactional
+    public void create(JournalEntry journalEntry, String userName) {
+        User user = userService.getUserByUserName(userName);
         journalEntry.setDate(LocalDateTime.now());
-        repository.save(journalEntry);
+        JournalEntry savedEntry = repository.save(journalEntry);
+        user.getJournalEntries().add(savedEntry);
+        userService.saveUser(user);
     }
 
-    public JournalEntry update(ObjectId id, JournalEntry journalEntry) {
+    public JournalEntry update(ObjectId id, JournalEntry journalEntry, String userName) {
         JournalEntry oldJournal = repository.findById(id).orElse(null);
 
         if (oldJournal != null) {
@@ -43,10 +53,14 @@ public class JournalEntryService {
         return journalEntry;
     }
 
-    public ResponseEntity<Object> delete(ObjectId id) {
-        Optional<JournalEntry> journalEntry = repository.findById(id);
+    @Transactional
+    public ResponseEntity<Object> delete(ObjectId id, String userName) {
+        User user = userService.getUserByUserName(userName);
 
-        if (journalEntry.isPresent()) {
+        if (user != null) {
+            user.getJournalEntries().removeIf(x -> x.equals(id));
+            userService.saveUser(user);
+            repository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

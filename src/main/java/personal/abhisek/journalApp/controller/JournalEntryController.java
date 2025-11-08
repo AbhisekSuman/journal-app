@@ -18,9 +18,9 @@ public class JournalEntryController {
     @Autowired
     JournalEntryService service;
 
-    @GetMapping(path = "/")
-    public ResponseEntity<List<JournalEntry>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    @GetMapping(path = "/{userName}")
+    public ResponseEntity<List<JournalEntry>> getAllJournalOfUser(@PathVariable String userName) {
+        return new ResponseEntity<>(service.getAll(userName), HttpStatus.OK);
     }
 
     @GetMapping(path = "/id/{id}")
@@ -33,10 +33,10 @@ public class JournalEntryController {
         return new ResponseEntity<>(HttpStatus. BAD_REQUEST);
     }
 
-    @PostMapping(path = "/")
-    public ResponseEntity<JournalEntry> createJournalEntry(@RequestBody JournalEntry journalEntry) {
+    @PostMapping(path = "/{userName}")
+    public ResponseEntity<JournalEntry> createJournalEntry(@RequestBody JournalEntry journalEntry, @PathVariable String userName) {
         try {
-            service.create(journalEntry);
+            service.create(journalEntry, userName);
             return new ResponseEntity<>(journalEntry, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,14 +44,14 @@ public class JournalEntryController {
         }
     }
 
-    @PutMapping(path = "/id/{id}")
-    public ResponseEntity<JournalEntry> updateJournalEntry(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
-        return new  ResponseEntity<>(service.update(id, journalEntry), HttpStatus.OK);
+    @PutMapping(path = "/id/{userName}/{id}")
+    public ResponseEntity<JournalEntry> updateJournalEntry(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry, @PathVariable String userName) {
+        return new  ResponseEntity<>(service.update(id, journalEntry, userName), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<Object> deleteJournalEntry(@PathVariable ObjectId id) {
-        return service.delete(id);
+    @DeleteMapping("/id/{userName}/{id}")
+    public ResponseEntity<Object> deleteJournalEntry(@PathVariable ObjectId id, @PathVariable String userName) {
+        return service.delete(id, userName);
     }
 
 }
