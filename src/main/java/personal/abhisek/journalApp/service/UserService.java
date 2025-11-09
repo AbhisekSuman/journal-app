@@ -2,15 +2,19 @@ package personal.abhisek.journalApp.service;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import personal.abhisek.journalApp.entity.User;
 import personal.abhisek.journalApp.repository.UserRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     UserRepository userRepository;
@@ -28,6 +32,8 @@ public class UserService {
     }
 
     public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList("user"));
         userRepository.save(user);
     }
 
