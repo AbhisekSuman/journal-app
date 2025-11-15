@@ -39,18 +39,18 @@ public class JournalEntryService {
         journalEntry.setDate(LocalDateTime.now());
         JournalEntry savedEntry = repository.save(journalEntry);
         user.getJournalEntries().add(savedEntry);
-        userService.saveUser(user);
+        userService.saveEntry(user);
     }
 
-    public JournalEntry update(ObjectId id, JournalEntry journalEntry, String userName) {
+    public JournalEntry update(ObjectId id, JournalEntry journalEntry) {
         JournalEntry oldJournal = repository.findById(id).orElse(null);
 
         if (oldJournal != null) {
             oldJournal.setTitle(journalEntry.getTitle() != null && journalEntry.getTitle().isEmpty() ? oldJournal.getTitle() : journalEntry.getTitle());
             oldJournal.setDescription(journalEntry.getDescription() != null && journalEntry.getDescription().isEmpty() ? oldJournal.getDescription() : journalEntry.getDescription());
+            repository.save(oldJournal);
         }
-        repository.save(journalEntry);
-        return journalEntry;
+        return oldJournal;
     }
 
     @Transactional
@@ -58,10 +58,13 @@ public class JournalEntryService {
         User user = userService.getUserByUserName(userName);
 
         if (user != null) {
-            user.getJournalEntries().removeIf(x -> x.equals(id));
-            userService.saveUser(user);
-            repository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            boolean isRemoved = user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+            if (isRemoved) {
+                userService.saveEntry(user);
+                repository.deleteById(id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

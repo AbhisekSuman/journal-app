@@ -33,12 +33,21 @@ public class UserService {
 
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList("user"));
+        user.setRoles(Arrays.asList("USER"));
         userRepository.save(user);
     }
 
+    public void saveEntry(User user) {
+        userRepository.save(user);
+    }
 
     public void delete(ObjectId id) {
        userRepository.deleteById(id);
+    }
+
+    public void saveAdmin(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList("USER", "ADMIN"));
+        userRepository.save(user);
     }
 }
