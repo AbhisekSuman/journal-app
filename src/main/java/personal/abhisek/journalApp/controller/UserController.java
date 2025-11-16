@@ -41,6 +41,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @DeleteMapping("/username/{userName}")
     public ResponseEntity<?> deleteUser(@PathVariable String userName, @RequestBody User user) {
         User user1 = service.getUserByUserName(userName);
 
