@@ -12,3 +12,8 @@ logging:
   level:
     personal:
       abhisek: OFF
+
+
+weather:
+  api:
+    key: 92e15afaa0ce449394245724251711

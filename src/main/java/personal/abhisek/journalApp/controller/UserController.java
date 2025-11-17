@@ -7,8 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import personal.abhisek.journalApp.api.response.WeatherReesponse;
 import personal.abhisek.journalApp.entity.User;
 import personal.abhisek.journalApp.service.UserService;
+import personal.abhisek.journalApp.service.WeatherService;
 
 import java.util.List;
 
@@ -19,12 +21,23 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @GetMapping("/")
-    public List<User> getAllUser() {
-        return service.getAllUser();
+    @Autowired
+    private WeatherService weatherService;
+
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUser(@RequestParam String city) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        WeatherReesponse weatherReesponse = weatherService.getWeather(city);
+        String greetings = "";
+
+        if (weatherReesponse != null) {
+            greetings = "Current weather in Mumbai feels like " + weatherReesponse.getCurrent().getFeelsLikeC() + " celcius";
+        }
+
+        return new ResponseEntity<>("Hii, " + userName + greetings,HttpStatus.OK);
     }
-
-
 
     @PutMapping("")
     public ResponseEntity<?> updateUser(@RequestBody User user) {
