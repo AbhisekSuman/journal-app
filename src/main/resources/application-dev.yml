@@ -6,6 +6,17 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://abhisek_db_user:wDaAcNfg33KB505k@cluster0.nl5haet.mongodb.net/journaldb
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nayaksuman115@gmail.com
+    password: npbw lfvx rzpx ajyx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 logging:
