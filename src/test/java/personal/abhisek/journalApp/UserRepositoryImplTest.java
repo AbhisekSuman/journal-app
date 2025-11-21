@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import personal.abhisek.journalApp.repository.UserRepositoryImpl;
-
-import java.util.List;
+import personal.abhisek.journalApp.service.UserRepositoryImpl;
 
 @SpringBootTest
 public class UserRepositoryImplTest {
