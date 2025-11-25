@@ -33,10 +33,10 @@ public class UserController {
         String greetings = "";
 
         if (weatherReesponse != null) {
-            greetings = "Current weather in Mumbai feels like " + weatherReesponse.getCurrent().getFeelsLikeC() + " celcius";
+            greetings = "Current weather in " + city + " feels like " + weatherReesponse.getCurrent().getFeelsLikeC() + " celcius";
         }
 
-        return new ResponseEntity<>("Hii, " + userName + greetings,HttpStatus.OK);
+        return new ResponseEntity<>("Hii, " + userName + "\n" + greetings,HttpStatus.OK);
     }
 
     @PutMapping("")
